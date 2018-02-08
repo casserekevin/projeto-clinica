@@ -132,6 +132,7 @@ public class CadEspecialidadeView extends JDialog {
 			JOptionPane.showMessageDialog(null, "Evento ja existente", "Erro", JOptionPane.ERROR_MESSAGE);
 		} else {
 			Especialidade esp = new Especialidade(txtf_espec.getText());
+			txtf_espec.setText("");
 			esp = new EspecialidadeDAO().insert(esp);
 			EspecialidadeTableModel model = (EspecialidadeTableModel) tbl_espec.getModel();
 			model.addRow(esp);
