@@ -144,6 +144,7 @@ public class CadEspecialidadeView extends JDialog {
 		if (esp != null) {
 			EspecialidadeTableModel model = (EspecialidadeTableModel) tbl_espec.getModel();
 			model.addRow(esp);
+
 		}
 	}
 
