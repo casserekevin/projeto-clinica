@@ -46,6 +46,8 @@ public class CadMedicoView extends JDialog {
 	private JLabel lbl_cadMedico;
 	private JButton btn_3p;
 
+	private Especialidade[] vetor;
+
 	public static void main(String[] args) {
 		CadMedicoView dialog = new CadMedicoView();
 		dialog.setVisible(true);
@@ -128,7 +130,8 @@ public class CadMedicoView extends JDialog {
 		panel.add(lbl_especialidade);
 
 		cb_especialidade = new JComboBox<>();
-		cb_especialidade.setModel(new DefaultComboBoxModel(new EspecialidadeDAO().searchAllArray()));
+		vetor = new EspecialidadeDAO().searchAllArray();
+		cb_especialidade.setModel(new DefaultComboBoxModel(vetor));
 		cb_especialidade.setBounds(616, 31, 130, 20);
 		panel.add(cb_especialidade);
 
@@ -195,9 +198,10 @@ public class CadMedicoView extends JDialog {
 	}
 
 	private void btn_3pActionPerformed(ActionEvent evt) {
-		CadEspecialidadeView janela = new CadEspecialidadeView();
+		CadEspecialidadeView janela = new CadEspecialidadeView(vetor);
 		janela.setVisible(true);
 
+		vetor = janela.getArrayTable();
 		cb_especialidade.setModel(new DefaultComboBoxModel<>(janela.getArrayTable()));
 	}
 }

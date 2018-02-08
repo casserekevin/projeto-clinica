@@ -21,6 +21,13 @@ public class EspecialidadeTableModel extends AbstractTableModel {
 		fireTableDataChanged();
 	}
 
+	public EspecialidadeTableModel(Especialidade[] esp) {
+		for (int i = 0; i < esp.length; i++) {
+			especialidades.add(esp[i]);
+		}
+		fireTableDataChanged();
+	}
+
 	public List<Especialidade> getEspecialidades() {
 		return especialidades;
 	}

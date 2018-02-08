@@ -3,14 +3,12 @@ package br.com.kevin.view;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
@@ -19,6 +17,7 @@ import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
 import javax.swing.table.DefaultTableCellRenderer;
 
+import br.com.kevin.controller.ControleEspecialidade;
 import br.com.kevin.model.EspecialidadeTableModel;
 import br.com.kevin.model.bean.Especialidade;
 import br.com.kevin.model.dao.EspecialidadeDAO;
@@ -33,12 +32,22 @@ public class CadEspecialidadeView extends JDialog {
 	private JButton btn_excluir;
 	private JButton btn_fechar;
 
+	private ControleEspecialidade controle = new ControleEspecialidade();
+
+	private Especialidade[] vetor;
+
 	public static void main(String[] args) {
 		CadEspecialidadeView dialog = new CadEspecialidadeView();
 		dialog.setVisible(true);
 	}
 
 	public CadEspecialidadeView() {
+		initLeF();
+		initComponents();
+	}
+
+	public CadEspecialidadeView(Especialidade[] array) {
+		vetor = array;
 		initLeF();
 		initComponents();
 	}
@@ -78,7 +87,11 @@ public class CadEspecialidadeView extends JDialog {
 		scrollPane = new JScrollPane();
 		scrollPane.setBounds(50, 75, 350, 200);
 		getContentPane().add(scrollPane);
-		tbl_espec = new JTable(new EspecialidadeTableModel(new EspecialidadeDAO().searchAll()));
+		if (vetor == null) {
+			tbl_espec = new JTable(new EspecialidadeTableModel(new EspecialidadeDAO().searchAll()));
+		} else {
+			tbl_espec = new JTable(new EspecialidadeTableModel(vetor));
+		}
 		DefaultTableCellRenderer Renderer = new DefaultTableCellRenderer();
 		Renderer.setHorizontalAlignment(SwingConstants.LEFT);
 		tbl_espec.setDefaultRenderer(Integer.class, Renderer);
@@ -125,15 +138,10 @@ public class CadEspecialidadeView extends JDialog {
 	}
 
 	private void btn_cadastrarActionPerformed(ActionEvent e) {
-
-		if (txtf_espec.getText().equalsIgnoreCase("")) {
-			JOptionPane.showMessageDialog(null, "Nome inválido", "Erro", JOptionPane.ERROR_MESSAGE);
-		} else if (isExistingInTable(txtf_espec.getText())) {
-			JOptionPane.showMessageDialog(null, "Evento ja existente", "Erro", JOptionPane.ERROR_MESSAGE);
-		} else {
-			Especialidade esp = new Especialidade(txtf_espec.getText());
-			txtf_espec.setText("");
-			esp = new EspecialidadeDAO().insert(esp);
+		Especialidade esp = new Especialidade(txtf_espec.getText());
+		txtf_espec.setText("");
+		esp = controle.cadastrar(esp);
+		if (esp != null) {
 			EspecialidadeTableModel model = (EspecialidadeTableModel) tbl_espec.getModel();
 			model.addRow(esp);
 		}
@@ -143,19 +151,8 @@ public class CadEspecialidadeView extends JDialog {
 		if (tbl_espec.getSelectedRow() != -1) {
 			EspecialidadeTableModel model = (EspecialidadeTableModel) tbl_espec.getModel();
 			Especialidade esp = model.removeRow(tbl_espec.getSelectedRow());
-			new EspecialidadeDAO().delete(esp);
+			controle.deletar(esp);
 		}
-	}
-
-	private boolean isExistingInTable(String s) {
-		boolean value = false;
-		List<Especialidade> especialidades = new EspecialidadeDAO().searchAll();
-		for (int i = 0; i < especialidades.size(); i++) {
-			if (especialidades.get(i).getNome().equalsIgnoreCase(s) == true) {
-				value = true;
-			}
-		}
-		return value;
 	}
 
 	public Especialidade[] getArrayTable() {
