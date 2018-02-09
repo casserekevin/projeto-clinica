@@ -38,7 +38,6 @@ public class EspecialidadeTableModel extends AbstractTableModel {
 
 	public Especialidade[] getEspecialidadesArray() {
 		return especialidades.toArray(new Especialidade[0]);
-
 	}
 
 	@Override
