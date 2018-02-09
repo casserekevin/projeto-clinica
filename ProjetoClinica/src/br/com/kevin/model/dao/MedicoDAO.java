@@ -15,7 +15,7 @@ public class MedicoDAO {
 		con = ConnectionFactory.getConnection();
 	}
 
-	public void insert(Medico medico) {
+	public boolean insert(Medico medico) {
 
 		String sql = "INSERT INTO medico (nome, crm, Especialidade_id) VALUES (?, ?, ?)";
 
@@ -28,8 +28,10 @@ public class MedicoDAO {
 			stmt.setInt(3, medico.getEspecialidade().getId());
 			stmt.execute();
 
+			return true;
 		} catch (SQLException ex) {
 			System.err.println("Insert: MedicoDAO - Erro: " + ex);
+			return false;
 		} finally {
 			ConnectionFactory.closeConnection(con, stmt);
 		}

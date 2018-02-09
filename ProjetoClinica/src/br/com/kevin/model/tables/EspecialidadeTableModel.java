@@ -60,7 +60,7 @@ public class EspecialidadeTableModel extends AbstractTableModel {
 
 		switch (numColuna) {
 		case 0:
-			return especialidades.get(numLinha).getNome();
+			return especialidades.get(numLinha);
 		}
 
 		return null;

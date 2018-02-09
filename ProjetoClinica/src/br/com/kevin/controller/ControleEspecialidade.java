@@ -21,8 +21,15 @@ public class ControleEspecialidade {
 		return null;
 	}
 
-	public void deletar(Especialidade esp) {
-		new EspecialidadeDAO().delete(esp);
+	public boolean deletar(Especialidade esp) {
+		if (new EspecialidadeDAO().delete(esp)) {
+			JOptionPane.showMessageDialog(null, "Excluído com sucesso", "Aviso", JOptionPane.INFORMATION_MESSAGE);
+			return true;
+		} else {
+			JOptionPane.showMessageDialog(null, "Especialidade Usada", "Erro", JOptionPane.ERROR_MESSAGE);
+			return false;
+		}
+
 	}
 
 	private boolean isExistingInTable(String s) {

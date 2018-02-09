@@ -8,6 +8,8 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException;
+
 import br.com.kevin.connection.ConnectionFactory;
 import br.com.kevin.model.bean.Especialidade;
 
@@ -128,6 +130,8 @@ public class EspecialidadeDAO {
 			stmt.setInt(1, esp.getId());
 			stmt.executeUpdate();
 			return true;
+		} catch (MySQLIntegrityConstraintViolationException ex) {
+			return false;
 		} catch (SQLException ex) {
 			System.err.println("Delete: EspecialidadeDAO - Erro: " + ex);
 			return false;

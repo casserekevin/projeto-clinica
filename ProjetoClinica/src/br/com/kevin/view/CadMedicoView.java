@@ -22,7 +22,9 @@ import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
 import javax.swing.border.EtchedBorder;
 
+import br.com.kevin.controller.ControleMedico;
 import br.com.kevin.model.bean.Especialidade;
+import br.com.kevin.model.bean.Medico;
 import br.com.kevin.model.dao.EspecialidadeDAO;
 
 @SuppressWarnings("serial")
@@ -32,7 +34,7 @@ public class CadMedicoView extends JDialog {
 	private JButton btn_novo;
 	private JButton btn_editar;
 	private JButton btn_excluir;
-	private JButton btn_salvar;
+	private JButton btn_cadastrar;
 	private JButton btn_cancelar;
 	private JLabel lbl_nome;
 	private JTextField txtf_nome;
@@ -45,6 +47,8 @@ public class CadMedicoView extends JDialog {
 	private JTable table;
 	private JLabel lbl_cadMedico;
 	private JButton btn_3p;
+
+	private ControleMedico controle = new ControleMedico();
 
 	private Especialidade[] vetor;
 
@@ -112,14 +116,16 @@ public class CadMedicoView extends JDialog {
 		btn_excluir.setEnabled(false);
 		panel.add(btn_excluir);
 
-		btn_salvar = new JButton("Salvar");
-		btn_salvar.addActionListener(new ActionListener() {
+		btn_cadastrar = new JButton("Cadastrar");
+		btn_cadastrar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				btn_cadastrarActionPerformed(e);
 			}
+
 		});
-		btn_salvar.setBounds(616, 354, 89, 23);
-		btn_salvar.setEnabled(false);
-		panel.add(btn_salvar);
+		btn_cadastrar.setBounds(616, 354, 89, 23);
+		btn_cadastrar.setEnabled(false);
+		panel.add(btn_cadastrar);
 
 		btn_cancelar = new JButton("Cancelar");
 		btn_cancelar.setBounds(517, 354, 89, 23);
@@ -211,10 +217,15 @@ public class CadMedicoView extends JDialog {
 	}
 
 	private void btn_novoActionPerformed(ActionEvent e) {
-		btn_salvar.setEnabled(true);
+		btn_cadastrar.setEnabled(true);
 		txtf_nome.setEnabled(true);
 		cb_especialidade.setEnabled(true);
 		txtf_crm.setEnabled(true);
+	}
+
+	private void btn_cadastrarActionPerformed(ActionEvent e) {
+		Medico m = new Medico(txtf_nome.getText(), Integer.parseInt(txtf_crm.getText()), (Especialidade) cb_especialidade.getSelectedItem());
+		controle.cadastrar(m);
 	}
 
 	private void btn_3pActionPerformed(ActionEvent evt) {

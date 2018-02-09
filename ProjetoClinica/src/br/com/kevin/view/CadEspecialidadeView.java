@@ -150,9 +150,12 @@ public class CadEspecialidadeView extends JDialog {
 
 	private void btn_excluirActionPerformed(ActionEvent e) {
 		if (tbl_espec.getSelectedRow() != -1) {
+
 			EspecialidadeTableModel model = (EspecialidadeTableModel) tbl_espec.getModel();
-			Especialidade esp = model.removeRow(tbl_espec.getSelectedRow());
-			controle.deletar(esp);
+			Especialidade esp = model.getValueAt(tbl_espec.getSelectedRow());
+			if (controle.deletar(esp)) {
+				model.removeRow(tbl_espec.getSelectedRow());
+			}
 		}
 	}
 

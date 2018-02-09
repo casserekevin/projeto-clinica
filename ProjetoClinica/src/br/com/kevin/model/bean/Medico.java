@@ -13,6 +13,12 @@ public class Medico {
 		this.id = id;
 	}
 
+	public Medico(String nome, int crm, Especialidade especialidade) {
+		this.nome = nome;
+		this.crm = crm;
+		this.especialidade = especialidade;
+	}
+
 	public Medico(int id, String nome, int crm, Especialidade especialidade) {
 		this.id = id;
 		this.nome = nome;
