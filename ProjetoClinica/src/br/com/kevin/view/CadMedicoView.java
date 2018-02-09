@@ -93,15 +93,23 @@ public class CadMedicoView extends JDialog {
 		getContentPane().add(panel);
 
 		btn_novo = new JButton("Novo");
+		btn_novo.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				btn_novoActionPerformed(e);
+			}
+
+		});
 		btn_novo.setBounds(10, 26, 89, 23);
 		panel.add(btn_novo);
 
 		btn_editar = new JButton("Editar");
 		btn_editar.setBounds(10, 60, 89, 23);
+		btn_editar.setEnabled(false);
 		panel.add(btn_editar);
 
 		btn_excluir = new JButton("Excluir");
 		btn_excluir.setBounds(10, 94, 89, 23);
+		btn_excluir.setEnabled(false);
 		panel.add(btn_excluir);
 
 		btn_salvar = new JButton("Salvar");
@@ -110,10 +118,12 @@ public class CadMedicoView extends JDialog {
 			}
 		});
 		btn_salvar.setBounds(616, 354, 89, 23);
+		btn_salvar.setEnabled(false);
 		panel.add(btn_salvar);
 
 		btn_cancelar = new JButton("Cancelar");
 		btn_cancelar.setBounds(517, 354, 89, 23);
+		btn_cancelar.setEnabled(false);
 		panel.add(btn_cancelar);
 
 		lbl_nome = new JLabel("Nome:");
@@ -122,8 +132,9 @@ public class CadMedicoView extends JDialog {
 
 		txtf_nome = new JTextField();
 		txtf_nome.setBounds(161, 26, 363, 30);
-		panel.add(txtf_nome);
+		txtf_nome.setEnabled(false);
 		txtf_nome.setColumns(10);
+		panel.add(txtf_nome);
 
 		lbl_especialidade = new JLabel("Especialidade:");
 		lbl_especialidade.setBounds(534, 34, 86, 14);
@@ -133,6 +144,7 @@ public class CadMedicoView extends JDialog {
 		vetor = new EspecialidadeDAO().searchAllArray();
 		cb_especialidade.setModel(new DefaultComboBoxModel(vetor));
 		cb_especialidade.setBounds(616, 31, 130, 20);
+		cb_especialidade.setEnabled(false);
 		panel.add(cb_especialidade);
 
 		lbl_crm = new JLabel("CRM:");
@@ -141,8 +153,9 @@ public class CadMedicoView extends JDialog {
 
 		txtf_crm = new JTextField();
 		txtf_crm.setBounds(161, 60, 74, 30);
-		panel.add(txtf_crm);
+		txtf_crm.setEnabled(false);
 		txtf_crm.setColumns(10);
+		panel.add(txtf_crm);
 
 		table = new JTable();
 		table.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
@@ -195,6 +208,13 @@ public class CadMedicoView extends JDialog {
 		lbl_cadMedico.setFont(new Font("Tahoma", Font.PLAIN, 18));
 		lbl_cadMedico.setBounds(349, 11, 155, 22);
 		getContentPane().add(lbl_cadMedico);
+	}
+
+	private void btn_novoActionPerformed(ActionEvent e) {
+		btn_salvar.setEnabled(true);
+		txtf_nome.setEnabled(true);
+		cb_especialidade.setEnabled(true);
+		txtf_crm.setEnabled(true);
 	}
 
 	private void btn_3pActionPerformed(ActionEvent evt) {

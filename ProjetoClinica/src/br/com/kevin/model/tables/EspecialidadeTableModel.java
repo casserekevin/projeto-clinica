@@ -1,4 +1,4 @@
-package br.com.kevin.model;
+package br.com.kevin.model.tables;
 
 import java.util.ArrayList;
 import java.util.List;

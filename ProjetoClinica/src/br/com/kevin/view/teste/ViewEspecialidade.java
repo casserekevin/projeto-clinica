@@ -14,8 +14,8 @@ import javax.swing.JTextField;
 import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
 
-import br.com.kevin.model.EspecialidadeTableModel;
 import br.com.kevin.model.bean.Especialidade;
+import br.com.kevin.model.tables.EspecialidadeTableModel;
 
 @SuppressWarnings("serial")
 public class ViewEspecialidade extends JDialog {

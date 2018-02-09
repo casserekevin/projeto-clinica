@@ -18,9 +18,9 @@ import javax.swing.UIManager.LookAndFeelInfo;
 import javax.swing.table.DefaultTableCellRenderer;
 
 import br.com.kevin.controller.ControleEspecialidade;
-import br.com.kevin.model.EspecialidadeTableModel;
 import br.com.kevin.model.bean.Especialidade;
 import br.com.kevin.model.dao.EspecialidadeDAO;
+import br.com.kevin.model.tables.EspecialidadeTableModel;
 
 @SuppressWarnings("serial")
 public class CadEspecialidadeView extends JDialog {
