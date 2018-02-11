@@ -16,6 +16,7 @@ public class ControleEspecialidade {
 			JOptionPane.showMessageDialog(null, "Evento ja existente", "Erro", JOptionPane.ERROR_MESSAGE);
 		} else {
 			esp = new EspecialidadeDAO().insert(esp);
+			JOptionPane.showMessageDialog(null, "Cadastrado com sucesso", "Aviso", JOptionPane.INFORMATION_MESSAGE);
 			return esp;
 		}
 		return null;

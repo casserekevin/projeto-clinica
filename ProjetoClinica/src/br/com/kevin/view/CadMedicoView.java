@@ -12,6 +12,7 @@ import java.util.logging.Logger;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
@@ -47,6 +48,9 @@ public class CadMedicoView extends JDialog {
 	private JTable table;
 	private JLabel lbl_cadMedico;
 	private JButton btn_3p;
+	private JCheckBox ckb_porNome;
+	private JCheckBox ckb_porEspecialidade;
+	private JCheckBox ckb_porCrm;
 
 	private ControleMedico controle = new ControleMedico();
 
@@ -84,7 +88,7 @@ public class CadMedicoView extends JDialog {
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	private void initComponents() {
 		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-		setBounds(100, 100, 836, 477);
+		setBounds(100, 100, 836, 500);
 		setLocationRelativeTo(null);
 		setModal(true);
 
@@ -92,7 +96,7 @@ public class CadMedicoView extends JDialog {
 
 		panel = new JPanel();
 		panel.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
-		panel.setBounds(10, 39, 800, 388);
+		panel.setBounds(10, 39, 800, 411);
 		panel.setLayout(null);
 		getContentPane().add(panel);
 
@@ -123,12 +127,12 @@ public class CadMedicoView extends JDialog {
 			}
 
 		});
-		btn_cadastrar.setBounds(616, 354, 89, 23);
+		btn_cadastrar.setBounds(552, 377, 89, 23);
 		btn_cadastrar.setEnabled(false);
 		panel.add(btn_cadastrar);
 
 		btn_cancelar = new JButton("Cancelar");
-		btn_cancelar.setBounds(517, 354, 89, 23);
+		btn_cancelar.setBounds(453, 377, 89, 23);
 		btn_cancelar.setEnabled(false);
 		panel.add(btn_cancelar);
 
@@ -166,7 +170,7 @@ public class CadMedicoView extends JDialog {
 		table = new JTable();
 		table.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 		table.setBackground(SystemColor.control);
-		table.setBounds(161, 162, 544, 181);
+		table.setBounds(161, 185, 480, 181);
 		panel.add(table);
 
 		txtf_pesquisar = new JTextField();
@@ -190,7 +194,8 @@ public class CadMedicoView extends JDialog {
 		txtf_pesquisar.setForeground(Color.GRAY);
 		txtf_pesquisar.setText("Ex: Eliseu dos Santos");
 		txtf_pesquisar.setColumns(10);
-		txtf_pesquisar.setBounds(161, 121, 445, 30);
+		txtf_pesquisar.setBounds(161, 144, 381, 30);
+		txtf_pesquisar.setEnabled(false);
 		panel.add(txtf_pesquisar);
 
 		btn_pesquisar = new JButton("Pesquisar");
@@ -198,7 +203,8 @@ public class CadMedicoView extends JDialog {
 			public void actionPerformed(ActionEvent e) {
 			}
 		});
-		btn_pesquisar.setBounds(616, 125, 89, 23);
+		btn_pesquisar.setBounds(552, 148, 89, 23);
+		btn_pesquisar.setEnabled(false);
 		panel.add(btn_pesquisar);
 
 		btn_3p = new JButton("...");
@@ -210,9 +216,39 @@ public class CadMedicoView extends JDialog {
 		btn_3p.setBounds(756, 31, 30, 20);
 		panel.add(btn_3p);
 
+		ckb_porNome = new JCheckBox("Por Nome");
+		ckb_porNome.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				ckb_porNomeActionPerformed(e);
+			}
+
+		});
+		ckb_porNome.setBounds(647, 185, 97, 23);
+		panel.add(ckb_porNome);
+
+		ckb_porEspecialidade = new JCheckBox("Por Especialidade");
+		ckb_porEspecialidade.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				ckb_porEspecialidadeActionPerformed(e);
+			}
+
+		});
+		ckb_porEspecialidade.setBounds(647, 211, 139, 23);
+		panel.add(ckb_porEspecialidade);
+
+		ckb_porCrm = new JCheckBox("Por CRM");
+		ckb_porCrm.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				ckb_porCrmActionPerformed(e);
+			}
+
+		});
+		ckb_porCrm.setBounds(647, 237, 97, 23);
+		panel.add(ckb_porCrm);
+
 		lbl_cadMedico = new JLabel("Cadastro de M\u00E9dico");
 		lbl_cadMedico.setFont(new Font("Tahoma", Font.PLAIN, 18));
-		lbl_cadMedico.setBounds(349, 11, 155, 22);
+		lbl_cadMedico.setBounds(338, 11, 155, 22);
 		getContentPane().add(lbl_cadMedico);
 	}
 
@@ -224,8 +260,12 @@ public class CadMedicoView extends JDialog {
 	}
 
 	private void btn_cadastrarActionPerformed(ActionEvent e) {
-		Medico m = new Medico(txtf_nome.getText(), Integer.parseInt(txtf_crm.getText()), (Especialidade) cb_especialidade.getSelectedItem());
-		controle.cadastrar(m);
+		Integer value = controle.parseToInt(txtf_crm.getText());
+		if (value != null) {
+			Medico m = new Medico(txtf_nome.getText(), value, (Especialidade) cb_especialidade.getSelectedItem());
+			controle.cadastrar(m);
+		}
+
 	}
 
 	private void btn_3pActionPerformed(ActionEvent evt) {
@@ -234,5 +274,48 @@ public class CadMedicoView extends JDialog {
 
 		vetor = janela.getArrayTable();
 		cb_especialidade.setModel(new DefaultComboBoxModel<>(janela.getArrayTable()));
+	}
+
+	private void ckb_porNomeActionPerformed(ActionEvent e) {
+		if (ckb_porNome.isSelected()) {
+			ckb_porEspecialidade.setEnabled(false);
+			ckb_porCrm.setEnabled(false);
+			txtf_pesquisar.setEnabled(true);
+			btn_pesquisar.setEnabled(true);
+		} else {
+			ckb_porEspecialidade.setEnabled(true);
+			ckb_porCrm.setEnabled(true);
+			txtf_pesquisar.setEnabled(false);
+			btn_pesquisar.setEnabled(false);
+		}
+	}
+
+	private void ckb_porEspecialidadeActionPerformed(ActionEvent e) {
+		if (ckb_porEspecialidade.isSelected()) {
+			ckb_porNome.setEnabled(false);
+			ckb_porCrm.setEnabled(false);
+			txtf_pesquisar.setEnabled(true);
+			btn_pesquisar.setEnabled(true);
+		} else {
+			ckb_porNome.setEnabled(true);
+			ckb_porCrm.setEnabled(true);
+			txtf_pesquisar.setEnabled(false);
+			btn_pesquisar.setEnabled(false);
+		}
+	}
+
+	private void ckb_porCrmActionPerformed(ActionEvent e) {
+		if (ckb_porCrm.isSelected()) {
+			ckb_porNome.setEnabled(false);
+			ckb_porEspecialidade.setEnabled(false);
+			txtf_pesquisar.setEnabled(true);
+			btn_pesquisar.setEnabled(true);
+		} else {
+			ckb_porNome.setEnabled(true);
+			ckb_porEspecialidade.setEnabled(true);
+			txtf_pesquisar.setEnabled(false);
+			btn_pesquisar.setEnabled(false);
+		}
+
 	}
 }
