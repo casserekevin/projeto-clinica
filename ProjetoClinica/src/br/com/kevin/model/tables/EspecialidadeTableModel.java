@@ -34,6 +34,7 @@ public class EspecialidadeTableModel extends AbstractTableModel {
 
 	public void setEspecialidades(List<Especialidade> especialidades) {
 		this.especialidades = especialidades;
+		fireTableDataChanged();
 	}
 
 	public Especialidade[] getEspecialidadesArray() {
@@ -60,7 +61,7 @@ public class EspecialidadeTableModel extends AbstractTableModel {
 
 		switch (numColuna) {
 		case 0:
-			return especialidades.get(numLinha);
+			return especialidades.get(numLinha).getNome();
 		}
 
 		return null;

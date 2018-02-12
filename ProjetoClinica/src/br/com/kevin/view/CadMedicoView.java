@@ -1,12 +1,9 @@
 package br.com.kevin.view;
 
-import java.awt.Color;
 import java.awt.Font;
-import java.awt.SystemColor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -17,6 +14,7 @@ import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.UIManager;
@@ -27,6 +25,7 @@ import br.com.kevin.controller.ControleMedico;
 import br.com.kevin.model.bean.Especialidade;
 import br.com.kevin.model.bean.Medico;
 import br.com.kevin.model.dao.EspecialidadeDAO;
+import br.com.kevin.model.tables.MedicoTableModel;
 
 @SuppressWarnings("serial")
 public class CadMedicoView extends JDialog {
@@ -45,9 +44,10 @@ public class CadMedicoView extends JDialog {
 	private JTextField txtf_crm;
 	private JTextField txtf_pesquisar;
 	private JButton btn_pesquisar;
-	private JTable table;
 	private JLabel lbl_cadMedico;
 	private JButton btn_3p;
+	private JScrollPane scrollPane;
+	private JTable tbl_medico;
 	private JCheckBox ckb_porNome;
 	private JCheckBox ckb_porEspecialidade;
 	private JCheckBox ckb_porCrm;
@@ -167,32 +167,7 @@ public class CadMedicoView extends JDialog {
 		txtf_crm.setColumns(10);
 		panel.add(txtf_crm);
 
-		table = new JTable();
-		table.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
-		table.setBackground(SystemColor.control);
-		table.setBounds(161, 185, 480, 181);
-		panel.add(table);
-
 		txtf_pesquisar = new JTextField();
-		txtf_pesquisar.addFocusListener(new FocusAdapter() {
-			@Override
-			public void focusGained(FocusEvent e) {
-				if (txtf_pesquisar.getText().equals("Ex: Eliseu dos Santos")) {
-					txtf_pesquisar.setForeground(Color.BLACK);
-					txtf_pesquisar.setText("");
-				}
-			}
-
-			@Override
-			public void focusLost(FocusEvent e) {
-				if (txtf_pesquisar.getText().equals("")) {
-					txtf_pesquisar.setForeground(Color.GRAY);
-					txtf_pesquisar.setText("Ex: Eliseu dos Santos");
-				}
-			}
-		});
-		txtf_pesquisar.setForeground(Color.GRAY);
-		txtf_pesquisar.setText("Ex: Eliseu dos Santos");
 		txtf_pesquisar.setColumns(10);
 		txtf_pesquisar.setBounds(161, 144, 381, 30);
 		txtf_pesquisar.setEnabled(false);
@@ -201,7 +176,9 @@ public class CadMedicoView extends JDialog {
 		btn_pesquisar = new JButton("Pesquisar");
 		btn_pesquisar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				btn_pesquisarActionPerformed(e);
 			}
+
 		});
 		btn_pesquisar.setBounds(552, 148, 89, 23);
 		btn_pesquisar.setEnabled(false);
@@ -233,7 +210,7 @@ public class CadMedicoView extends JDialog {
 			}
 
 		});
-		ckb_porEspecialidade.setBounds(647, 211, 139, 23);
+		ckb_porEspecialidade.setBounds(647, 237, 139, 23);
 		panel.add(ckb_porEspecialidade);
 
 		ckb_porCrm = new JCheckBox("Por CRM");
@@ -243,8 +220,15 @@ public class CadMedicoView extends JDialog {
 			}
 
 		});
-		ckb_porCrm.setBounds(647, 237, 97, 23);
+		ckb_porCrm.setBounds(647, 211, 97, 23);
 		panel.add(ckb_porCrm);
+
+		scrollPane = new JScrollPane();
+		scrollPane.setBounds(161, 185, 480, 181);
+		panel.add(scrollPane);
+
+		tbl_medico = new JTable(new MedicoTableModel());
+		scrollPane.setViewportView(tbl_medico);
 
 		lbl_cadMedico = new JLabel("Cadastro de M\u00E9dico");
 		lbl_cadMedico.setFont(new Font("Tahoma", Font.PLAIN, 18));
@@ -266,6 +250,23 @@ public class CadMedicoView extends JDialog {
 			controle.cadastrar(m);
 		}
 
+	}
+
+	private void btn_pesquisarActionPerformed(ActionEvent e) {
+		if (ckb_porNome.isSelected()) {
+			MedicoTableModel model = (MedicoTableModel) tbl_medico.getModel();
+			model.setMedicos(controle.searchByName(txtf_pesquisar.getText()));
+		} else if (ckb_porCrm.isSelected()) {
+			List<Medico> medicos = controle.searchByCrm(txtf_pesquisar.getText());
+			if (medicos != null) {
+				MedicoTableModel model = (MedicoTableModel) tbl_medico.getModel();
+				model.setMedicos(medicos);
+			}
+		} else if (ckb_porEspecialidade.isSelected()) {
+			MedicoTableModel model = (MedicoTableModel) tbl_medico.getModel();
+			model.setMedicos(controle.searchByEsp(txtf_pesquisar.getText()));
+		}
+		txtf_pesquisar.setText("");
 	}
 
 	private void btn_3pActionPerformed(ActionEvent evt) {
