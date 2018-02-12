@@ -62,6 +62,10 @@ public class MedicoTableModel extends AbstractTableModel {
 		return null;
 	}
 
+	public Medico getValueAt(int numLinha) {
+		return medicos.get(numLinha);
+	}
+
 	@Override
 	public void setValueAt(Object value, int numLinha, int numColuna) {
 
@@ -77,6 +81,11 @@ public class MedicoTableModel extends AbstractTableModel {
 		}
 		fireTableCellUpdated(numLinha, numColuna);
 
+	}
+
+	public void clearAll() {
+		medicos.clear();
+		fireTableDataChanged();
 	}
 
 }

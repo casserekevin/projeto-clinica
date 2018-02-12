@@ -3,6 +3,10 @@ package br.com.kevin.view;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -228,6 +232,20 @@ public class CadMedicoView extends JDialog {
 		panel.add(scrollPane);
 
 		tbl_medico = new JTable(new MedicoTableModel());
+		tbl_medico.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyReleased(KeyEvent e) {
+				tbl_medicoKeyReleased(e);
+			}
+		});
+		tbl_medico.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				tbl_medicoMouseClicked(e);
+			}
+
+		});
+
 		scrollPane.setViewportView(tbl_medico);
 
 		lbl_cadMedico = new JLabel("Cadastro de M\u00E9dico");
@@ -241,6 +259,21 @@ public class CadMedicoView extends JDialog {
 		txtf_nome.setEnabled(true);
 		cb_especialidade.setEnabled(true);
 		txtf_crm.setEnabled(true);
+		txtf_pesquisar.setEnabled(false);
+		btn_pesquisar.setEnabled(false);
+		ckb_porNome.setSelected(false);
+		ckb_porCrm.setSelected(false);
+		ckb_porEspecialidade.setSelected(false);
+		ckb_porNome.setEnabled(true);
+		ckb_porCrm.setEnabled(true);
+		ckb_porEspecialidade.setEnabled(true);
+		txtf_nome.setText("");
+		txtf_crm.setText("");
+		cb_especialidade.setSelectedIndex(0);
+		MedicoTableModel model = (MedicoTableModel) tbl_medico.getModel();
+		model.clearAll();
+		btn_editar.setEnabled(false);
+		btn_excluir.setEnabled(false);
 	}
 
 	private void btn_cadastrarActionPerformed(ActionEvent e) {
@@ -248,8 +281,52 @@ public class CadMedicoView extends JDialog {
 		if (value != null) {
 			Medico m = new Medico(txtf_nome.getText(), value, (Especialidade) cb_especialidade.getSelectedItem());
 			controle.cadastrar(m);
+			txtf_crm.setText("");
+			txtf_nome.setText("");
+			cb_especialidade.setSelectedIndex(0);
+			txtf_nome.setEnabled(false);
+			txtf_crm.setEnabled(false);
+			cb_especialidade.setEnabled(false);
+			btn_cadastrar.setEnabled(false);
 		}
+	}
 
+	private void tbl_medicoMouseClicked(MouseEvent e) {
+
+		MedicoTableModel model = (MedicoTableModel) tbl_medico.getModel();
+		Medico m = model.getValueAt(tbl_medico.getSelectedRow());
+
+		txtf_nome.setText(m.getNome());
+		txtf_crm.setText(String.valueOf(m.getCrm()));
+		cb_especialidade.setEditable(true);
+		cb_especialidade.setSelectedItem(m.getEspecialidade());
+		cb_especialidade.setEditable(false);
+		txtf_nome.setEnabled(true);
+		txtf_crm.setEnabled(true);
+		cb_especialidade.setEnabled(true);
+		btn_editar.setEnabled(true);
+		btn_excluir.setEnabled(true);
+
+	}
+
+	private void tbl_medicoKeyReleased(KeyEvent e) {
+
+		if ((e.getKeyCode() == KeyEvent.VK_DOWN || e.getKeyCode() == KeyEvent.VK_UP) && btn_cadastrar.isEnabled() == false) {
+			MedicoTableModel model = (MedicoTableModel) tbl_medico.getModel();
+			Medico m = model.getValueAt(tbl_medico.getSelectedRow());
+
+			txtf_nome.setText(m.getNome());
+			txtf_crm.setText(String.valueOf(m.getCrm()));
+			cb_especialidade.setEditable(true);
+			cb_especialidade.setSelectedItem(m.getEspecialidade());
+			cb_especialidade.setEditable(false);
+			txtf_nome.setEnabled(true);
+			txtf_crm.setEnabled(true);
+			cb_especialidade.setEnabled(true);
+			btn_editar.setEnabled(true);
+			btn_excluir.setEnabled(true);
+
+		}
 	}
 
 	private void btn_pesquisarActionPerformed(ActionEvent e) {
@@ -267,6 +344,15 @@ public class CadMedicoView extends JDialog {
 			model.setMedicos(controle.searchByEsp(txtf_pesquisar.getText()));
 		}
 		txtf_pesquisar.setText("");
+		txtf_nome.setText("");
+		txtf_crm.setText("");
+		cb_especialidade.setSelectedIndex(0);
+		txtf_nome.setEnabled(false);
+		txtf_crm.setEnabled(false);
+		cb_especialidade.setEnabled(false);
+		btn_editar.setEnabled(false);
+		btn_excluir.setEnabled(false);
+		btn_cadastrar.setEnabled(false);
 	}
 
 	private void btn_3pActionPerformed(ActionEvent evt) {
@@ -275,6 +361,13 @@ public class CadMedicoView extends JDialog {
 
 		vetor = janela.getArrayTable();
 		cb_especialidade.setModel(new DefaultComboBoxModel<>(janela.getArrayTable()));
+		if (tbl_medico.getSelectedRow() != -1) {
+			MedicoTableModel model = (MedicoTableModel) tbl_medico.getModel();
+			Medico m = model.getValueAt(tbl_medico.getSelectedRow());
+			cb_especialidade.setEditable(true);
+			cb_especialidade.setSelectedItem(m.getEspecialidade());
+			cb_especialidade.setEditable(false);
+		}
 	}
 
 	private void ckb_porNomeActionPerformed(ActionEvent e) {

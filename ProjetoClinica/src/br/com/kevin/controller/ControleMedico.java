@@ -11,6 +11,7 @@ public class ControleMedico {
 
 	public void cadastrar(Medico m) {
 		new MedicoDAO().insert(m);
+		JOptionPane.showMessageDialog(null, "Cadastrado com sucesso", "Aviso", JOptionPane.INFORMATION_MESSAGE);
 	}
 
 	public List<Medico> searchByName(String s) {
