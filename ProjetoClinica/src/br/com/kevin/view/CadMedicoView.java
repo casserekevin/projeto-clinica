@@ -120,6 +120,12 @@ public class CadMedicoView extends JDialog {
 		panel.add(btn_editar);
 
 		btn_excluir = new JButton("Excluir");
+		btn_excluir.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				btn_excluirActionPerformed(e);
+			}
+
+		});
 		btn_excluir.setBounds(10, 94, 89, 23);
 		btn_excluir.setEnabled(false);
 		panel.add(btn_excluir);
@@ -288,6 +294,22 @@ public class CadMedicoView extends JDialog {
 			txtf_crm.setEnabled(false);
 			cb_especialidade.setEnabled(false);
 			btn_cadastrar.setEnabled(false);
+		}
+	}
+
+	private void btn_excluirActionPerformed(ActionEvent e) {
+		if (tbl_medico.getSelectedRow() != -1) {
+			MedicoTableModel model = (MedicoTableModel) tbl_medico.getModel();
+			Medico m = model.removeRow(tbl_medico.getSelectedRow());
+			controle.delete(m);
+			txtf_nome.setText("");
+			txtf_crm.setText("");
+			cb_especialidade.setSelectedIndex(0);
+			txtf_nome.setEnabled(false);
+			cb_especialidade.setEnabled(false);
+			txtf_crm.setEnabled(false);
+			btn_editar.setEnabled(false);
+			btn_excluir.setEnabled(false);
 		}
 	}
 

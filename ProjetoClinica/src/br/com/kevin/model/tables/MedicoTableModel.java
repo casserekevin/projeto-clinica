@@ -83,6 +83,13 @@ public class MedicoTableModel extends AbstractTableModel {
 
 	}
 
+	public Medico removeRow(int numLinha) {
+		Medico esp = getValueAt(numLinha);
+		medicos.remove(numLinha);
+		fireTableRowsDeleted(numLinha, numLinha);
+		return esp;
+	}
+
 	public void clearAll() {
 		medicos.clear();
 		fireTableDataChanged();

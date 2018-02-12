@@ -45,6 +45,16 @@ public class ControleMedico {
 		return medicos;
 	}
 
+	public boolean delete(Medico m) {
+		boolean retorno = false;
+
+		if (new MedicoDAO().delete(m)) {
+			retorno = true;
+			JOptionPane.showMessageDialog(null, "Deletado com sucesso", "Aviso", JOptionPane.INFORMATION_MESSAGE);
+		}
+		return retorno;
+	}
+
 	public Integer parseToInt(String s) {
 		Integer value = null;
 		try {

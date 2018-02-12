@@ -7,6 +7,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException;
+
 import br.com.kevin.connection.ConnectionFactory;
 import br.com.kevin.model.bean.Especialidade;
 import br.com.kevin.model.bean.Medico;
@@ -198,5 +200,26 @@ public class MedicoDAO {
 			ConnectionFactory.closeConnection(con, stmt, rs);
 		}
 		return medicos;
+	}
+
+	public boolean delete(Medico m) {// DELETE
+
+		String sql = "DELETE FROM medico WHERE id = ?";
+
+		PreparedStatement stmt = null;
+
+		try {
+			stmt = con.prepareStatement(sql);
+			stmt.setInt(1, m.getId());
+			stmt.executeUpdate();
+			return true;
+		} catch (MySQLIntegrityConstraintViolationException ex) {
+			return false;
+		} catch (SQLException ex) {
+			System.err.println("Delete: EspecialidadeDAO - Erro: " + ex);
+			return false;
+		} finally {
+			ConnectionFactory.closeConnection(con, stmt);
+		}
 	}
 }
