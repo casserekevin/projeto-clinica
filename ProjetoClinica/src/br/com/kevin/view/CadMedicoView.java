@@ -275,7 +275,9 @@ public class CadMedicoView extends JDialog {
 		ckb_porEspecialidade.setEnabled(true);
 		txtf_nome.setText("");
 		txtf_crm.setText("");
-		cb_especialidade.setSelectedIndex(0);
+		if(cb_especialidade.getModel().getSize() != 0) {
+			cb_especialidade.setSelectedIndex(0);			
+		}
 		MedicoTableModel model = (MedicoTableModel) tbl_medico.getModel();
 		model.clearAll();
 		btn_editar.setEnabled(false);
@@ -368,7 +370,9 @@ public class CadMedicoView extends JDialog {
 		txtf_pesquisar.setText("");
 		txtf_nome.setText("");
 		txtf_crm.setText("");
-		cb_especialidade.setSelectedIndex(0);
+		if(cb_especialidade.getModel().getSize() != 0) {
+			cb_especialidade.setSelectedIndex(0);			
+		}
 		txtf_nome.setEnabled(false);
 		txtf_crm.setEnabled(false);
 		cb_especialidade.setEnabled(false);
