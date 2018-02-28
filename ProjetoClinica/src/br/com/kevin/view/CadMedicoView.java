@@ -285,13 +285,12 @@ public class CadMedicoView extends JDialog {
 	}
 
 	private void btn_cadastrarActionPerformed(ActionEvent e) {
-		Integer value = controle.parseToInt(txtf_crm.getText());
-		if (value != null) {
-			Medico m = new Medico(txtf_nome.getText(), value, (Especialidade) cb_especialidade.getSelectedItem());
+		if (controle.validaValores(txtf_nome.getText(), (Especialidade) cb_especialidade.getSelectedItem(), txtf_crm.getText())) {
+			Medico m = new Medico(controle.getNome(), controle.getCrm(), controle.getEspecialidade());
 			controle.cadastrar(m);
 			txtf_crm.setText("");
 			txtf_nome.setText("");
-			cb_especialidade.setSelectedIndex(0);
+			cb_especialidade.setSelectedIndex(0);			
 			txtf_nome.setEnabled(false);
 			txtf_crm.setEnabled(false);
 			cb_especialidade.setEnabled(false);

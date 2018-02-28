@@ -4,14 +4,48 @@ import java.util.List;
 
 import javax.swing.JOptionPane;
 
+import br.com.kevin.model.bean.Especialidade;
 import br.com.kevin.model.bean.Medico;
 import br.com.kevin.model.dao.MedicoDAO;
 
 public class ControleMedico {
 
+	private String nome;
+	private Especialidade esp;
+	private int crm;
+	
+	public String getNome() {
+		return nome;
+	}
+	
+	public Especialidade getEspecialidade() {
+		return esp;
+	}
+	
+	public int getCrm() {
+		return crm;
+	}
+	
 	public void cadastrar(Medico m) {
-		new MedicoDAO().insert(m);
-		JOptionPane.showMessageDialog(null, "Cadastrado com sucesso", "Aviso", JOptionPane.INFORMATION_MESSAGE);
+			new MedicoDAO().insert(m);
+			JOptionPane.showMessageDialog(null, "Cadastrado com sucesso", "Aviso", JOptionPane.INFORMATION_MESSAGE);			
+		
+	}
+	public boolean validaValores(String nome, Especialidade esp, String crm) {
+		boolean retorno = true;
+		if(validaNome(nome) == false) {
+			JOptionPane.showMessageDialog(null, "Nome inválido", "Erro", JOptionPane.ERROR_MESSAGE);
+			retorno = false;
+		}
+		else if(validaEspecialidade(esp) == false) {
+			JOptionPane.showMessageDialog(null, "Especialidade inválida", "Erro", JOptionPane.ERROR_MESSAGE);
+			retorno = false;
+		}
+		else if(validaCRM(crm) == false){
+			JOptionPane.showMessageDialog(null, "CRM inválido", "Erro", JOptionPane.ERROR_MESSAGE);
+			retorno = false;
+		}
+		return retorno;
 	}
 
 	public List<Medico> searchByName(String s) {
@@ -28,7 +62,7 @@ public class ControleMedico {
 		List<Medico> medicos = null;
 		if (s.equalsIgnoreCase("")) {
 			medicos = new MedicoDAO().searchAllByCrmOrdered();
-		} else if (parseToInt(s) == null) {
+		} else if (validaCRM(s) == false) {
 		} else {
 			medicos = new MedicoDAO().searchByCrmOrdered(s);
 		}
@@ -54,16 +88,36 @@ public class ControleMedico {
 		}
 		return retorno;
 	}
-
-	public Integer parseToInt(String s) {
-		Integer value = null;
+	
+	private boolean validaNome(String nome) {
+		if(nome.equalsIgnoreCase("")) {
+			return false;
+		}
+		else {
+			this.nome = nome;
+			return true;
+		}
+	}
+	
+	private boolean validaEspecialidade(Especialidade esp) {
+		if(esp == null) {
+			return false;
+		}
+		else {
+			this.esp = esp;
+			return true;
+		}
+	}
+	
+	private boolean validaCRM(String crm) {
+		if(crm.equalsIgnoreCase("")) {
+			return false;
+		}
 		try {
-			value = Integer.parseInt(s);
-
-			return value;
+			this.crm = Integer.parseInt(crm);
+			return true;
 		} catch (NumberFormatException ex) {
-			JOptionPane.showMessageDialog(null, "CRM inválido", "Erro", JOptionPane.ERROR_MESSAGE);
-			return value;
+			return false;
 		}
 	}
 

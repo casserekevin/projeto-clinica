@@ -8,18 +8,25 @@ import br.com.kevin.model.bean.Especialidade;
 import br.com.kevin.model.dao.EspecialidadeDAO;
 
 public class ControleEspecialidade {
+	
+	private String nome;
 
-	public Especialidade cadastrar(Especialidade esp) {
-		if (esp.getNome().equalsIgnoreCase("")) {
-			JOptionPane.showMessageDialog(null, "Nome inválido", "Erro", JOptionPane.ERROR_MESSAGE);
-		} else if (isExistingInTable(esp.getNome())) {
-			JOptionPane.showMessageDialog(null, "Evento ja existente", "Erro", JOptionPane.ERROR_MESSAGE);
-		} else {
-			esp = new EspecialidadeDAO().insert(esp);
-			JOptionPane.showMessageDialog(null, "Cadastrado com sucesso", "Aviso", JOptionPane.INFORMATION_MESSAGE);
-			return esp;
+	public String getNome() {
+		return nome;
+	}
+
+	public void cadastrar(Especialidade esp) {
+		esp = new EspecialidadeDAO().insert(esp);
+		JOptionPane.showMessageDialog(null, "Cadastrado com sucesso", "Aviso", JOptionPane.INFORMATION_MESSAGE);
+	}
+	
+	public boolean validarValores(String nome) {
+		boolean retorno = true;
+		if (validarNome(nome) == false) {
+			retorno = false;
 		}
-		return null;
+		return retorno;
+		
 	}
 
 	public boolean deletar(Especialidade esp) {
@@ -43,6 +50,21 @@ public class ControleEspecialidade {
 		}
 		return value;
 
+	}
+	
+	private boolean validarNome(String nome) {
+		if(nome.equalsIgnoreCase("")) {
+			JOptionPane.showMessageDialog(null, "Nome inválido", "Erro", JOptionPane.ERROR_MESSAGE);
+			return false;
+		}
+		else if(isExistingInTable(nome)) {
+			JOptionPane.showMessageDialog(null, "Especialidade ja existente", "Erro", JOptionPane.ERROR_MESSAGE);
+			return false;
+		}
+		else {
+			this.nome = nome;
+			return true;
+		}
 	}
 
 }

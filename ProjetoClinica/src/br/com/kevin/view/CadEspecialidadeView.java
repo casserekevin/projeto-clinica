@@ -138,13 +138,12 @@ public class CadEspecialidadeView extends JDialog {
 	}
 
 	private void btn_cadastrarActionPerformed(ActionEvent e) {
-		Especialidade esp = new Especialidade(txtf_espec.getText());
-		txtf_espec.setText("");
-		esp = controle.cadastrar(esp);
-		if (esp != null) {
+		if(controle.validarValores(txtf_espec.getText())) {
+			Especialidade esp = new Especialidade(controle.getNome());			
+			controle.cadastrar(esp);
+			txtf_espec.setText("");
 			EspecialidadeTableModel model = (EspecialidadeTableModel) tbl_espec.getModel();
 			model.addRow(esp);
-
 		}
 	}
 
