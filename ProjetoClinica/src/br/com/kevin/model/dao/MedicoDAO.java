@@ -18,7 +18,28 @@ public class MedicoDAO {
 	private Connection con = null;
 
 	public MedicoDAO() {
-		con = ConnectionFactory.getConnection();
+		this.con = ConnectionFactory.getConnection();
+	}
+
+	public boolean delete(Medico m) {// DELETE
+
+		String sql = "DELETE FROM medico WHERE id = ?";
+
+		PreparedStatement stmt = null;
+
+		try {
+			stmt = this.con.prepareStatement(sql);
+			stmt.setInt(1, m.getId());
+			stmt.executeUpdate();
+			return true;
+		} catch (MySQLIntegrityConstraintViolationException ex) {
+			return false;
+		} catch (SQLException ex) {
+			System.err.println("Delete: EspecialidadeDAO - Erro: " + ex);
+			return false;
+		} finally {
+			ConnectionFactory.closeConnection(this.con, stmt);
+		}
 	}
 
 	public boolean insert(Medico medico) {
@@ -28,7 +49,7 @@ public class MedicoDAO {
 		PreparedStatement stmt = null;
 
 		try {
-			stmt = con.prepareStatement(sql);
+			stmt = this.con.prepareStatement(sql);
 			stmt.setString(1, medico.getNome());
 			stmt.setInt(2, medico.getCrm());
 			stmt.setInt(3, medico.getEspecialidade().getId());
@@ -39,14 +60,13 @@ public class MedicoDAO {
 			System.err.println("Insert: MedicoDAO - Erro: " + ex);
 			return false;
 		} finally {
-			ConnectionFactory.closeConnection(con, stmt);
+			ConnectionFactory.closeConnection(this.con, stmt);
 		}
 	}
 
-	public List<Medico> searchByNameOrdered(String nome) {
+	public List<Medico> searchAllByCrmOrdered() {
 
-		String sql = "select m.id, m.nome, m.crm, e.id, e.nome as especialidade from medico as m join especialidade as e on m.Especialidade_id = e.id where m.nome like '%"
-				+ nome + "%' order by m.nome";
+		String sql = "select m.id, m.nome, m.crm, e.id, e.nome as especialidade from medico as m join especialidade as e on m.Especialidade_id = e.id order by m.crm";
 
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
@@ -54,7 +74,7 @@ public class MedicoDAO {
 		List<Medico> medicos = new ArrayList<>();
 
 		try {
-			stmt = con.prepareStatement(sql);
+			stmt = this.con.prepareStatement(sql);
 			rs = stmt.executeQuery();
 
 			while (rs.next()) {
@@ -63,9 +83,35 @@ public class MedicoDAO {
 				medicos.add(m);
 			}
 		} catch (SQLException ex) {
-			System.err.println("searchByNameOrdered: MedicoDAO - Erro: " + ex);
+			System.err.println("searchAllByCrmOrdered: MedicoDAO - Erro: " + ex);
 		} finally {
-			ConnectionFactory.closeConnection(con, stmt, rs);
+			ConnectionFactory.closeConnection(this.con, stmt, rs);
+		}
+		return medicos;
+	}
+
+	public List<Medico> searchAllByEspOrdered() {
+
+		String sql = "select m.id, m.nome, m.crm, e.id, e.nome as especialidade from medico as m join especialidade as e on m.Especialidade_id = e.id order by e.nome";
+
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+
+		List<Medico> medicos = new ArrayList<>();
+
+		try {
+			stmt = this.con.prepareStatement(sql);
+			rs = stmt.executeQuery();
+
+			while (rs.next()) {
+				Especialidade esp = new Especialidade(rs.getInt(4), rs.getString(5));
+				Medico m = new Medico(rs.getInt(1), rs.getString(2), rs.getInt(3), esp);
+				medicos.add(m);
+			}
+		} catch (SQLException ex) {
+			System.err.println("searchAllByEspOrdered: MedicoDAO - Erro: " + ex);
+		} finally {
+			ConnectionFactory.closeConnection(this.con, stmt, rs);
 		}
 		return medicos;
 	}
@@ -80,7 +126,7 @@ public class MedicoDAO {
 		List<Medico> medicos = new ArrayList<>();
 
 		try {
-			stmt = con.prepareStatement(sql);
+			stmt = this.con.prepareStatement(sql);
 			rs = stmt.executeQuery();
 
 			while (rs.next()) {
@@ -91,7 +137,7 @@ public class MedicoDAO {
 		} catch (SQLException ex) {
 			System.err.println("searchAllByNameOrdered: MedicoDAO - Erro: " + ex);
 		} finally {
-			ConnectionFactory.closeConnection(con, stmt, rs);
+			ConnectionFactory.closeConnection(this.con, stmt, rs);
 		}
 		return medicos;
 	}
@@ -107,7 +153,7 @@ public class MedicoDAO {
 		List<Medico> medicos = new ArrayList<>();
 
 		try {
-			stmt = con.prepareStatement(sql);
+			stmt = this.con.prepareStatement(sql);
 			rs = stmt.executeQuery();
 
 			while (rs.next()) {
@@ -118,33 +164,7 @@ public class MedicoDAO {
 		} catch (SQLException ex) {
 			System.err.println("searchAllByCrmOrdered: MedicoDAO - Erro: " + ex);
 		} finally {
-			ConnectionFactory.closeConnection(con, stmt, rs);
-		}
-		return medicos;
-	}
-
-	public List<Medico> searchAllByCrmOrdered() {
-
-		String sql = "select m.id, m.nome, m.crm, e.id, e.nome as especialidade from medico as m join especialidade as e on m.Especialidade_id = e.id order by m.crm";
-
-		PreparedStatement stmt = null;
-		ResultSet rs = null;
-
-		List<Medico> medicos = new ArrayList<>();
-
-		try {
-			stmt = con.prepareStatement(sql);
-			rs = stmt.executeQuery();
-
-			while (rs.next()) {
-				Especialidade esp = new Especialidade(rs.getInt(4), rs.getString(5));
-				Medico m = new Medico(rs.getInt(1), rs.getString(2), rs.getInt(3), esp);
-				medicos.add(m);
-			}
-		} catch (SQLException ex) {
-			System.err.println("searchAllByCrmOrdered: MedicoDAO - Erro: " + ex);
-		} finally {
-			ConnectionFactory.closeConnection(con, stmt, rs);
+			ConnectionFactory.closeConnection(this.con, stmt, rs);
 		}
 		return medicos;
 	}
@@ -160,7 +180,7 @@ public class MedicoDAO {
 		List<Medico> medicos = new ArrayList<>();
 
 		try {
-			stmt = con.prepareStatement(sql);
+			stmt = this.con.prepareStatement(sql);
 			rs = stmt.executeQuery();
 
 			while (rs.next()) {
@@ -171,14 +191,15 @@ public class MedicoDAO {
 		} catch (SQLException ex) {
 			System.err.println("searchAllByEspOrdered: MedicoDAO - Erro: " + ex);
 		} finally {
-			ConnectionFactory.closeConnection(con, stmt, rs);
+			ConnectionFactory.closeConnection(this.con, stmt, rs);
 		}
 		return medicos;
 	}
 
-	public List<Medico> searchAllByEspOrdered() {
+	public List<Medico> searchByNameOrdered(String nome) {
 
-		String sql = "select m.id, m.nome, m.crm, e.id, e.nome as especialidade from medico as m join especialidade as e on m.Especialidade_id = e.id order by e.nome";
+		String sql = "select m.id, m.nome, m.crm, e.id, e.nome as especialidade from medico as m join especialidade as e on m.Especialidade_id = e.id where m.nome like '%"
+				+ nome + "%' order by m.nome";
 
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
@@ -186,7 +207,7 @@ public class MedicoDAO {
 		List<Medico> medicos = new ArrayList<>();
 
 		try {
-			stmt = con.prepareStatement(sql);
+			stmt = this.con.prepareStatement(sql);
 			rs = stmt.executeQuery();
 
 			while (rs.next()) {
@@ -195,31 +216,32 @@ public class MedicoDAO {
 				medicos.add(m);
 			}
 		} catch (SQLException ex) {
-			System.err.println("searchAllByEspOrdered: MedicoDAO - Erro: " + ex);
+			System.err.println("searchByNameOrdered: MedicoDAO - Erro: " + ex);
 		} finally {
-			ConnectionFactory.closeConnection(con, stmt, rs);
+			ConnectionFactory.closeConnection(this.con, stmt, rs);
 		}
 		return medicos;
 	}
 
-	public boolean delete(Medico m) {// DELETE
+	public boolean update(Medico esp) {// UPDATE
 
-		String sql = "DELETE FROM medico WHERE id = ?";
+		String sql = "UPDATE medico SET nome = ?, crm = ?, Especialidade_id = ? WHERE id = ?;";
 
 		PreparedStatement stmt = null;
 
 		try {
-			stmt = con.prepareStatement(sql);
-			stmt.setInt(1, m.getId());
+			stmt = this.con.prepareStatement(sql);
+			stmt.setString(1, esp.getNome());
+			stmt.setInt(2, esp.getCrm());
+			stmt.setInt(3, esp.getEspecialidade().getId());
+			stmt.setInt(4, esp.getId());
 			stmt.executeUpdate();
 			return true;
-		} catch (MySQLIntegrityConstraintViolationException ex) {
-			return false;
 		} catch (SQLException ex) {
-			System.err.println("Delete: EspecialidadeDAO - Erro: " + ex);
+			System.err.println("Update: MedicoDAO - Erro: " + ex);
 			return false;
 		} finally {
-			ConnectionFactory.closeConnection(con, stmt);
+			ConnectionFactory.closeConnection(this.con, stmt);
 		}
 	}
 }
