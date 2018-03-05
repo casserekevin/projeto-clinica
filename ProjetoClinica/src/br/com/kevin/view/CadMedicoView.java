@@ -17,6 +17,7 @@ import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -98,33 +99,40 @@ public class CadMedicoView extends JDialog {
 			this.txtf_crm.setEnabled(false);
 			this.cb_especialidade.setEnabled(false);
 			this.btn_cadastrar.setEnabled(false);
+			this.btn_cancelar.setEnabled(false);
 		}
 	}
 
 	private void btn_cancelarActionPerformed(ActionEvent e) {
-		this.txtf_nome.setText("");
-		this.txtf_crm.setText("");
-		this.txtf_nome.setEnabled(false);
-		this.txtf_crm.setEnabled(false);
-		if (this.cb_especialidade.getModel().getSize() != 0) {
-			this.cb_especialidade.setSelectedIndex(0);
+		if (JOptionPane.showConfirmDialog(this, "Deseja continuar?", "Pergunta", JOptionPane.YES_NO_OPTION,
+				JOptionPane.INFORMATION_MESSAGE) == 0) {
+			this.txtf_nome.setText("");
+			this.txtf_crm.setText("");
+			this.txtf_nome.setEnabled(false);
+			this.txtf_crm.setEnabled(false);
+			if (this.cb_especialidade.getModel().getSize() != 0) {
+				this.cb_especialidade.setSelectedIndex(0);
+			}
+			this.cb_especialidade.setEnabled(false);
+			this.btn_cadastrar.setEnabled(false);
+			this.btn_cancelar.setEnabled(false);
+			this.ckb_porNome.setSelected(false);
+			this.ckb_porCrm.setSelected(false);
+			this.ckb_porEspecialidade.setSelected(false);
+			this.ckb_porNome.setEnabled(true);
+			this.ckb_porCrm.setEnabled(true);
+			this.ckb_porEspecialidade.setEnabled(true);
+			this.txtf_pesquisar.setText("");
+			this.txtf_pesquisar.setEnabled(false);
+			this.btn_pesquisar.setEnabled(false);
+			MedicoTableModel model = (MedicoTableModel) this.tbl_medico.getModel();
+			model.clearAll();
+			this.btn_editar.setEnabled(false);
+			this.btn_excluir.setEnabled(false);
 		}
-		this.cb_especialidade.setEnabled(false);
-		this.btn_cadastrar.setEnabled(false);
-		this.btn_cancelar.setEnabled(false);
-		this.ckb_porNome.setSelected(false);
-		this.ckb_porCrm.setSelected(false);
-		this.ckb_porEspecialidade.setSelected(false);
-		this.ckb_porNome.setEnabled(true);
-		this.ckb_porCrm.setEnabled(true);
-		this.ckb_porEspecialidade.setEnabled(true);
-		this.txtf_pesquisar.setText("");
-		this.txtf_pesquisar.setEnabled(false);
-		this.btn_pesquisar.setEnabled(false);
-		MedicoTableModel model = (MedicoTableModel) this.tbl_medico.getModel();
-		model.clearAll();
-		this.btn_editar.setEnabled(false);
-		this.btn_excluir.setEnabled(false);
+		else {
+			dispose();
+		}
 	}
 
 	private void btn_editarActionPerformed(ActionEvent e) {
