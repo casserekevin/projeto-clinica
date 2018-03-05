@@ -34,12 +34,8 @@ import br.com.kevin.model.tables.MedicoTableModel;
 @SuppressWarnings("serial")
 public class CadMedicoView extends JDialog {
 
-	public static void main(String[] args) {
-		CadMedicoView dialog = new CadMedicoView();
-		dialog.setVisible(true);
-	}
-
 	private JButton btn_3p;
+
 	private JButton btn_cadastrar;
 	private JButton btn_cancelar;
 	private JButton btn_editar;
@@ -59,7 +55,6 @@ public class CadMedicoView extends JDialog {
 	private JScrollPane scrollPane;
 	private JTable tbl_medico;
 	private JTextField txtf_crm;
-
 	private JTextField txtf_nome;
 
 	private JTextField txtf_pesquisar;
@@ -69,6 +64,11 @@ public class CadMedicoView extends JDialog {
 	public CadMedicoView() {
 		initLeF();
 		initComponents();
+	}
+
+	public static void main(String[] args) {
+		CadMedicoView dialog = new CadMedicoView();
+		dialog.setVisible(true);
 	}
 
 	private void btn_3pActionPerformed(ActionEvent evt) {
@@ -99,6 +99,32 @@ public class CadMedicoView extends JDialog {
 			this.cb_especialidade.setEnabled(false);
 			this.btn_cadastrar.setEnabled(false);
 		}
+	}
+
+	private void btn_cancelarActionPerformed(ActionEvent e) {
+		this.txtf_nome.setText("");
+		this.txtf_crm.setText("");
+		this.txtf_nome.setEnabled(false);
+		this.txtf_crm.setEnabled(false);
+		if (this.cb_especialidade.getModel().getSize() != 0) {
+			this.cb_especialidade.setSelectedIndex(0);
+		}
+		this.cb_especialidade.setEnabled(false);
+		this.btn_cadastrar.setEnabled(false);
+		this.btn_cancelar.setEnabled(false);
+		this.ckb_porNome.setSelected(false);
+		this.ckb_porCrm.setSelected(false);
+		this.ckb_porEspecialidade.setSelected(false);
+		this.ckb_porNome.setEnabled(true);
+		this.ckb_porCrm.setEnabled(true);
+		this.ckb_porEspecialidade.setEnabled(true);
+		this.txtf_pesquisar.setText("");
+		this.txtf_pesquisar.setEnabled(false);
+		this.btn_pesquisar.setEnabled(false);
+		MedicoTableModel model = (MedicoTableModel) this.tbl_medico.getModel();
+		model.clearAll();
+		this.btn_editar.setEnabled(false);
+		this.btn_excluir.setEnabled(false);
 	}
 
 	private void btn_editarActionPerformed(ActionEvent e) {
@@ -137,6 +163,7 @@ public class CadMedicoView extends JDialog {
 
 	private void btn_novoActionPerformed(ActionEvent e) {
 		this.btn_cadastrar.setEnabled(true);
+		this.btn_cancelar.setEnabled(true);
 		this.txtf_nome.setEnabled(true);
 		this.cb_especialidade.setEnabled(true);
 		this.txtf_crm.setEnabled(true);
@@ -195,12 +222,17 @@ public class CadMedicoView extends JDialog {
 			this.ckb_porEspecialidade.setEnabled(false);
 			this.txtf_pesquisar.setEnabled(true);
 			this.btn_pesquisar.setEnabled(true);
+			this.btn_cancelar.setEnabled(true);
 		}
 		else {
 			this.ckb_porNome.setEnabled(true);
 			this.ckb_porEspecialidade.setEnabled(true);
 			this.txtf_pesquisar.setEnabled(false);
 			this.btn_pesquisar.setEnabled(false);
+			MedicoTableModel model = (MedicoTableModel) this.tbl_medico.getModel();
+			if (model.getRowCount() == 0) {
+				this.btn_cancelar.setEnabled(false);
+			}
 		}
 
 	}
@@ -211,12 +243,17 @@ public class CadMedicoView extends JDialog {
 			this.ckb_porCrm.setEnabled(false);
 			this.txtf_pesquisar.setEnabled(true);
 			this.btn_pesquisar.setEnabled(true);
+			this.btn_cancelar.setEnabled(true);
 		}
 		else {
 			this.ckb_porNome.setEnabled(true);
 			this.ckb_porCrm.setEnabled(true);
 			this.txtf_pesquisar.setEnabled(false);
 			this.btn_pesquisar.setEnabled(false);
+			MedicoTableModel model = (MedicoTableModel) this.tbl_medico.getModel();
+			if (model.getRowCount() == 0) {
+				this.btn_cancelar.setEnabled(false);
+			}
 		}
 	}
 
@@ -226,12 +263,17 @@ public class CadMedicoView extends JDialog {
 			this.ckb_porCrm.setEnabled(false);
 			this.txtf_pesquisar.setEnabled(true);
 			this.btn_pesquisar.setEnabled(true);
+			this.btn_cancelar.setEnabled(true);
 		}
 		else {
 			this.ckb_porEspecialidade.setEnabled(true);
 			this.ckb_porCrm.setEnabled(true);
 			this.txtf_pesquisar.setEnabled(false);
 			this.btn_pesquisar.setEnabled(false);
+			MedicoTableModel model = (MedicoTableModel) this.tbl_medico.getModel();
+			if (model.getRowCount() == 0) {
+				this.btn_cancelar.setEnabled(false);
+			}
 		}
 	}
 
@@ -298,6 +340,13 @@ public class CadMedicoView extends JDialog {
 		this.panel.add(this.btn_cadastrar);
 
 		this.btn_cancelar = new JButton("Cancelar");
+		this.btn_cancelar.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				btn_cancelarActionPerformed(e);
+			}
+
+		});
 		this.btn_cancelar.setBounds(453, 377, 89, 23);
 		this.btn_cancelar.setEnabled(false);
 		this.panel.add(this.btn_cancelar);
